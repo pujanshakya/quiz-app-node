@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { DatabaseModule } from "./src/shared/database/database.module";
 import * as dotenv from "dotenv";
 import chalk from "chalk";
+import initRoutes from "./src/routes";
 dotenv.config();
 class App {
   public app: Application;
@@ -14,8 +15,8 @@ class App {
     this.app = express();
     this.databaseModule = DatabaseModule.getInstance();
     this.initializeMiddlewares();
-    this.initializeRoutes();
     this.initializeErrorHandling();
+    initRoutes(this.app);
   }
 
   private initializeMiddlewares(): void {
@@ -29,25 +30,6 @@ class App {
     // Body parsing middleware
     this.app.use(express.json({ limit: "10mb" }));
     this.app.use(express.urlencoded({ extended: true }));
-  }
-
-  private initializeRoutes(): void {
-    // Health check route
-    this.app.get("/health", (req: Request, res: Response) => {
-      res.status(200).json({
-        status: "OK",
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-      });
-    });
-
-    // 404 Handler
-    this.app.use((req: Request, res: Response) => {
-      res.status(404).json({
-        success: false,
-        message: "Route not found",
-      });
-    });
   }
 
   private initializeErrorHandling(): void {
