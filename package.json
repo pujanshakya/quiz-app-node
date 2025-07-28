@@ -5,11 +5,14 @@
   "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "local": "concurrently \"npx tsc --watch\" \"nodemon server.ts\""
+    "local": "concurrently \"npx tsc --watch\" \"nodemon server.ts\"",
+    "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -p -d src/configs/database.config.ts ./src/database/migrations/Migration",
+    "migration:up": "ts-node ./node_modules/typeorm/cli.js migration:run -d src/configs/database.config.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/pg": "^8.15.4",
     "chalk": "^5.4.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
