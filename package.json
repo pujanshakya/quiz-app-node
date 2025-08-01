@@ -14,6 +14,8 @@
   "dependencies": {
     "@types/pg": "^8.15.4",
     "chalk": "^5.4.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",

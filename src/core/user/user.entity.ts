@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { BaseEntity } from "../../shared/entities/base-entity";
 
-@Entity("admins")
-export class AdminEntity extends BaseEntity {
+@Entity("users")
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
