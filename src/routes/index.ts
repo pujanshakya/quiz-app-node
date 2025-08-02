@@ -14,7 +14,8 @@ const initRoutes = (app: Application) => {
   // API v1 routes
   const v1Router = Router();
 
-  v1Router.use("/users", userRouter);
+  v1Router.use("/user", userRouter);
+  v1Router.use("/auth", userRouter);
 
   // Mount v1 router to main app
   app.use("/api/v1", v1Router);

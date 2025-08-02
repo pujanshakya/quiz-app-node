@@ -5,12 +5,9 @@ import {
   EntityTarget,
   QueryRunner,
   ObjectLiteral,
+  FindOneOptions,
 } from "typeorm";
 import { AppDataSource } from "./../../configs/database.config";
-import {
-  PaginationOptions,
-  PaginationResult,
-} from "../interfaces/common.interface";
 
 export abstract class BaseRepository<T extends ObjectLiteral> {
   protected repository: Repository<T>;
@@ -34,16 +31,16 @@ export abstract class BaseRepository<T extends ObjectLiteral> {
     return await this.repository.find(options);
   }
 
-  async findById(id: string): Promise<T | null> {
-    return await this.repository.findOne({ where: { id } as any });
+  async findOne(options: FindOneOptions): Promise<T | null> {
+    return await this.repository.findOne(options);
   }
 
-  async update(id: string, data: Partial<T>): Promise<T | null> {
+  async update(id: number, data: Partial<T>): Promise<T | null> {
     await this.repository.update(id, data as any);
-    return await this.findById(id);
+    return await this.findOne({ where: { id } });
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: number): Promise<boolean> {
     const result = await this.repository.delete(id);
     return result.affected ? result.affected > 0 : false;
   }

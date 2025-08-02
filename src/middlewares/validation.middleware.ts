@@ -3,7 +3,7 @@ import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 import { ValidationException } from "../exceptions/validation.exception";
 
-export function validateBody<T>(targetClass: any) {
+export function validateBody<T>(targetClass: new () => T) {
   return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       req.body = plainToInstance(targetClass, req.body);

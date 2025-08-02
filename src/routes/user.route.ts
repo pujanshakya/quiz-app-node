@@ -1,12 +1,15 @@
 import { Request, Response, Router } from "express";
+import { validateBody } from "../middlewares/validation.middleware";
+import { CreateUserDto, UpdateUserDto } from "../core/user/user.dto";
+import { UserController } from "../core/user/user.controller";
 
 const userRouter: Router = Router();
+const userController = new UserController();
 
-userRouter.get("/", (req: Request, res: Response) => {
-  return res.status(200).json({
-    status: "success",
-    data: "I am on user route",
-  });
-});
+userRouter.post("/", validateBody(CreateUserDto), userController.store);
+userRouter.get("/", userController.getAllUsers);
+userRouter.get("/:id", userController.getUserById);
+userRouter.delete("/:id", userController.delete);
+userRouter.put("/:id", validateBody(UpdateUserDto), userController.update);
 
 export default userRouter;
