@@ -1,6 +1,7 @@
 import "reflect-metadata";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
+import path from "path";
 
 dotenv.config();
 
@@ -13,7 +14,8 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || "simple-quiz-app",
   synchronize: false, // auto create tables
   logging: false,
-  entities: [], // or ["src/entity/**/*.ts"]
-  //   migrations: ["src/migration/**/*.ts"],
+  entities: ["src/core/**/*.entity.ts"],
+  migrations: ["src/database/migrations/*.ts"],
   //   subscribers: ["src/subscriber/**/*.ts"],
+  migrationsTableName: "migrations",
 });

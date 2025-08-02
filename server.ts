@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -6,6 +6,9 @@ import { DatabaseModule } from "./src/shared/database/database.module";
 import * as dotenv from "dotenv";
 import chalk from "chalk";
 import initRoutes from "./src/routes";
+import { HttpException } from "./src/exceptions/http.exception";
+import { ValidationException } from "./src/exceptions/validation.exception";
+import { errorResponse } from "./src/helpers/response.helper";
 dotenv.config();
 class App {
   public app: Application;
@@ -15,8 +18,8 @@ class App {
     this.app = express();
     this.databaseModule = DatabaseModule.getInstance();
     this.initializeMiddlewares();
-    this.initializeErrorHandling();
     initRoutes(this.app);
+    this.initializeErrorHandling();
   }
 
   private initializeMiddlewares(): void {
@@ -33,17 +36,19 @@ class App {
   }
 
   private initializeErrorHandling(): void {
-    this.app.use((error: Error, req: Request, res: Response, next: any) => {
-      console.error(chalk.red("Error:", error));
-
-      res.status(500).json({
-        success: false,
-        message:
-          process.env.NODE_ENV === "production"
-            ? "Internal server error"
-            : error.message,
-      });
-    });
+    console.log(chalk.bgBlue("Error Handling Middleware"));
+    this.app.use(
+      (error: Error, req: Request, res: Response, next: NextFunction) => {
+        console.error(chalk.red("Error:", error));
+        if (error instanceof HttpException) {
+          errorResponse(res, Number(error?.status), error.message, "");
+        } else if (error instanceof ValidationException) {
+          errorResponse(res, 404, error.message, error.errors);
+        } else {
+          errorResponse(res, 500, "Something went wrong!", "");
+        }
+      }
+    );
   }
 
   public async start(): Promise<void> {
