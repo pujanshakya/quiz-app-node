@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { BaseEntity } from "../../shared/entities/base-entity";
+import { UserRole } from "./user.dto";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
@@ -17,4 +18,7 @@ export class UserEntity extends BaseEntity {
 
   @Column({ type: "varchar" })
   password!: string;
+
+  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
+  role!: UserRole;
 }

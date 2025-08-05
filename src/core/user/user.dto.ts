@@ -10,6 +10,11 @@ import { IsPasswordConfirmed } from "../../decorators/validation.decorator";
 export interface Params {
   id: string;
 }
+
+export enum UserRole {
+  ADMIN = "admin",
+  USER = "user",
+}
 export class CommonUserCreateDto {
   @IsDefined()
   @IsNotEmpty()
